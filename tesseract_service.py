@@ -13,21 +13,24 @@ from typing import Optional
 os.environ["TESSDATA_PREFIX"] = "/usr/share/tesseract-ocr/5/tessdata/"
 
 # EasyOCR loads multiple languages for script detection
-EASYOCR_LANGS = ['hi','or','bn','gu','ta','te','ml','kn','en']
+EASYOCR_LANGS = ['hi','bn','ta','te','kn','en']
 easy_reader = Reader(EASYOCR_LANGS, gpu=False)
 
 # Map EasyOCR -> Tesseract language codes
 TESS_LANG_MAP = {
     "hi": "hin",
-    "or": "ori",
     "bn": "ben",
-    "gu": "guj",
     "ta": "tam",
     "te": "tel",
-    "ml": "mal",
     "kn": "kan",
-    "en": "eng"
+    "en": "eng",
+
+    # fallback mappings
+    "or": "ori",
+    "gu": "guj",
+    "ml": "mal",
 }
+
 
 # FastAPI App
 app = FastAPI(title="Hybrid OCR (EasyOCR + Tesseract)")
@@ -122,3 +125,4 @@ def predict(req: ImageRequest):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("tesseract_service:app", host="0.0.0.0", port=8000, reload=True)
+
